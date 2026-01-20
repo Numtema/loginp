@@ -99,6 +99,11 @@ export const THEME = {
       availability: "Notre équipe est disponible 24/7 pour vous accompagner.",
       helpLabel: "Besoin d'aide ?"
     },
+    notification: {
+      label: "Nouveauté",
+      alertTitle: "Bonus de Bienvenue",
+      alertMessage: "Profitez de 0% de frais sur votre premier transfert !"
+    },
     dashboard: {
       welcome: "Bienvenue,",
       balanceTitle: "Solde actuel",

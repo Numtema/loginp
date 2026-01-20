@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LoginForm } from './components/LoginForm';
 import { SignupForm } from './components/SignupForm';
 import { ForgotPasswordForm } from './components/ForgotPasswordForm';
@@ -7,6 +7,7 @@ import { SidebarImage } from './components/SidebarImage';
 import { Logo } from './components/Logo';
 import { SupportButton } from './components/SupportButton';
 import { SupportMenu } from './components/SupportMenu';
+import { NotificationButton } from './components/NotificationButton';
 import { THEME } from './theme';
 import { useAuth } from './context/AuthContext';
 import { Dashboard } from './components/Dashboard';
@@ -17,6 +18,23 @@ const App: React.FC = () => {
   const { user } = useAuth(); // Récupération de l'utilisateur connecté
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthMode>('login');
+  
+  // État pour gérer la présence d'une notification
+  const [hasNotification, setHasNotification] = useState(false);
+
+  // Simulation: Une notification arrive 1.5s après le chargement
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setHasNotification(true);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleNotificationClick = () => {
+    // Action simple : afficher une alerte et masquer la notification (marquée comme lue)
+    alert(`${THEME.content.notification.alertTitle}\n${THEME.content.notification.alertMessage}`);
+    setHasNotification(false);
+  };
 
   const toggleAuthMode = () => {
     setAuthMode(prev => prev === 'login' ? 'signup' : 'login');
@@ -103,7 +121,12 @@ const App: React.FC = () => {
         <SidebarImage />
       </div>
 
-      {/* Support UI */}
+      {/* Floating Actions */}
+      {/* La notification s'affiche uniquement si hasNotification est true */}
+      {hasNotification && (
+        <NotificationButton onClick={handleNotificationClick} />
+      )}
+      
       <SupportButton onClick={() => setIsSupportOpen(true)} />
       <SupportMenu isOpen={isSupportOpen} onClose={() => setIsSupportOpen(false)} />
     </main>
