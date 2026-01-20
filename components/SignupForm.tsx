@@ -1,41 +1,70 @@
 
 import React, { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, User, Smartphone, Loader2 } from 'lucide-react';
 import { THEME } from '../theme';
 import { useAuth } from '../context/AuthContext';
 
-interface LoginFormProps {
-  onForgotPassword: () => void;
-}
+export const SignupForm: React.FC = () => {
+  const { signup, isLoading } = useAuth();
 
-export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
-  const { login, isLoading, error, clearError } = useAuth();
-  
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('demo@tara.com'); // Pré-rempli pour la démo
-  const [password, setPassword] = useState('password123'); // Pré-rempli pour la démo
-  const [rememberMe, setRememberMe] = useState(false);
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const t = THEME.content.login;
+  const t = THEME.content.signup;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(email, password);
+    await signup({ name, phone, email, password });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-7">
-      
-      {/* Error Message */}
-      {error && (
-        <div className="bg-red-50 text-red-600 p-4 rounded-xl flex items-start gap-3 text-sm font-medium border border-red-100 animate-in slide-in-from-top-2">
-            <AlertCircle className="shrink-0 mt-0.5" size={18} />
-            <div className="flex-1">
-                {error}
-                <button type="button" onClick={clearError} className="block mt-1 text-xs underline opacity-80 hover:opacity-100">Fermer</button>
-            </div>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Name Field */}
+      <div className="space-y-2.5">
+        <label className={`text-[11px] font-bold text-gray-400 uppercase tracking-[0.2em] ${THEME.typography.headerFont}`}>
+          {t.nameLabel} <span style={{ color: THEME.colors.primary }}>*</span>
+        </label>
+        <div className="relative group">
+          <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+            <User className="h-5 w-5 text-gray-400 group-focus-within:text-[#FF4D00] transition-colors" />
+          </div>
+          <div className="absolute inset-y-4 left-[3.25rem] border-l border-gray-200" />
+          <input
+            type="text"
+            required
+            disabled={isLoading}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder={t.namePlaceholder}
+            className={`block w-full pl-16 pr-5 py-5 bg-gray-100/50 border-none rounded-[1.25rem] focus:ring-2 focus:ring-[#FF4D00] focus:bg-white transition-all outline-none text-gray-900 placeholder-gray-400 font-medium ${THEME.typography.bodyFont} disabled:opacity-50`}
+          />
         </div>
-      )}
+      </div>
+
+      {/* Phone Field */}
+      <div className="space-y-2.5">
+        <label className={`text-[11px] font-bold text-gray-400 uppercase tracking-[0.2em] ${THEME.typography.headerFont}`}>
+          {t.phoneLabel} <span style={{ color: THEME.colors.primary }}>*</span>
+        </label>
+        <div className="relative group">
+          <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+            <Smartphone className="h-5 w-5 text-gray-400 group-focus-within:text-[#FF4D00] transition-colors" />
+          </div>
+          <div className="absolute inset-y-4 left-[3.25rem] border-l border-gray-200" />
+          <input
+            type="tel"
+            required
+            disabled={isLoading}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder={t.phonePlaceholder}
+            className={`block w-full pl-16 pr-5 py-5 bg-gray-100/50 border-none rounded-[1.25rem] focus:ring-2 focus:ring-[#FF4D00] focus:bg-white transition-all outline-none text-gray-900 placeholder-gray-400 font-medium ${THEME.typography.bodyFont} disabled:opacity-50`}
+          />
+        </div>
+      </div>
 
       {/* Email Field */}
       <div className="space-y-2.5">
@@ -89,47 +118,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
         </div>
       </div>
 
-      {/* Toggle Section */}
-      <div className="flex items-center justify-between py-4 px-6 bg-gray-100/40 rounded-[1.25rem] border border-black/5">
-        <div className="flex flex-col">
-          <span className={`text-[16px] font-bold text-gray-900 tracking-tight ${THEME.typography.headerFont}`}>
-            {t.rememberMe}
-          </span>
-          <span className={`text-[12px] text-gray-500 font-medium ${THEME.typography.bodyFont}`}>
-            {t.rememberMeSub}
-          </span>
-        </div>
-        <button
-          type="button"
-          disabled={isLoading}
-          onClick={() => setRememberMe(!rememberMe)}
-          className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 focus:outline-none ${
-            rememberMe ? 'bg-[#FF4D00]' : 'bg-gray-300'
-          } disabled:opacity-50`}
-        >
-          <span className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-300 shadow-sm ${rememberMe ? 'translate-x-6' : 'translate-x-1'}`} />
-        </button>
-      </div>
-
-      <div className="flex justify-end">
-        <button 
-          type="button" 
-          disabled={isLoading}
-          onClick={onForgotPassword}
-          className={`text-sm underline font-bold text-gray-900 hover:text-[#FF4D00] transition-colors ${THEME.typography.bodyFont} disabled:opacity-50`}
-        >
-          {t.forgotPassword}
-        </button>
-      </div>
-
       <button
         type="submit"
         disabled={isLoading}
         style={{ backgroundColor: THEME.colors.primary }}
-        className={`w-full hover:brightness-90 text-white font-extrabold text-xl py-5.5 px-6 rounded-[1.25rem] flex items-center justify-center gap-3 transform active:scale-[0.98] transition-all shadow-2xl shadow-orange-500/25 ${THEME.typography.headerFont} disabled:opacity-70 disabled:cursor-not-allowed`}
+        className={`w-full hover:brightness-90 text-white font-extrabold text-xl py-5.5 px-6 rounded-[1.25rem] flex items-center justify-center gap-3 transform active:scale-[0.98] transition-all shadow-2xl shadow-orange-500/25 mt-8 ${THEME.typography.headerFont} disabled:opacity-70 disabled:cursor-not-allowed`}
       >
         {isLoading ? (
-            <>
+             <>
                 <Loader2 className="animate-spin" size={24} />
                 {t.loadingBtn}
             </>

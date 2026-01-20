@@ -1,13 +1,54 @@
 
 import React, { useState } from 'react';
 import { LoginForm } from './components/LoginForm';
+import { SignupForm } from './components/SignupForm';
+import { ForgotPasswordForm } from './components/ForgotPasswordForm';
 import { SidebarImage } from './components/SidebarImage';
 import { Logo } from './components/Logo';
 import { SupportButton } from './components/SupportButton';
 import { SupportMenu } from './components/SupportMenu';
+import { THEME } from './theme';
+import { useAuth } from './context/AuthContext';
+import { Dashboard } from './components/Dashboard';
+
+type AuthMode = 'login' | 'signup' | 'forgot-password';
 
 const App: React.FC = () => {
+  const { user } = useAuth(); // Récupération de l'utilisateur connecté
   const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<AuthMode>('login');
+
+  const toggleAuthMode = () => {
+    setAuthMode(prev => prev === 'login' ? 'signup' : 'login');
+  };
+
+  const getHeaderContent = () => {
+    if (authMode === 'login') {
+      return {
+        title: THEME.content.login.title,
+        prompt: THEME.content.login.signupPrompt,
+        link: THEME.content.login.signupLink,
+        action: toggleAuthMode
+      };
+    }
+    if (authMode === 'signup') {
+      return {
+        title: THEME.content.signup.title,
+        prompt: THEME.content.signup.loginPrompt,
+        link: THEME.content.signup.loginLink,
+        action: toggleAuthMode
+      };
+    }
+    // forgot-password
+    return {
+      title: THEME.content.forgotPassword.title,
+      prompt: null,
+      link: null,
+      action: () => {}
+    };
+  };
+
+  const headerContent = getHeaderContent();
 
   return (
     <main className="min-h-screen flex flex-col md:flex-row p-4 md:p-6 lg:p-8 bg-[#fef8f4] relative">
@@ -18,17 +59,42 @@ const App: React.FC = () => {
             <Logo />
           </header>
           
-          <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-extrabold mb-2 tracking-tight font-degular">Connectez-vous!</h1>
-            <p className="text-sm md:text-base font-medium text-gray-600">
-              Vous n'avez pas de compte ?{' '}
-              <a href="#" className="underline font-bold text-gray-900 hover:text-orange-600 transition-colors">
-                Créez un compte
-              </a>
-            </p>
-          </div>
+          {/* Si utilisateur connecté, on affiche le dashboard, sinon le flow d'auth */}
+          {user ? (
+            <Dashboard />
+          ) : (
+            <>
+              <div className="mb-8 animate-in fade-in duration-300" key={authMode}>
+                <h1 className={`text-3xl md:text-4xl font-extrabold mb-2 tracking-tight ${THEME.typography.headerFont}`}>
+                  {headerContent.title}
+                </h1>
+                
+                {headerContent.prompt && (
+                  <p className={`text-sm md:text-base font-medium text-gray-600 ${THEME.typography.bodyFont}`}>
+                    {headerContent.prompt}{' '}
+                    <button 
+                      onClick={headerContent.action}
+                      className="underline font-bold text-gray-900 hover:text-orange-600 transition-colors cursor-pointer"
+                    >
+                      {headerContent.link}
+                    </button>
+                  </p>
+                )}
+              </div>
 
-          <LoginForm />
+              <div className="animate-in slide-in-from-bottom-4 duration-500 fade-in" key={`${authMode}-form`}>
+                {authMode === 'login' && (
+                  <LoginForm onForgotPassword={() => setAuthMode('forgot-password')} />
+                )}
+                {authMode === 'signup' && (
+                  <SignupForm />
+                )}
+                {authMode === 'forgot-password' && (
+                  <ForgotPasswordForm onBack={() => setAuthMode('login')} />
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
 

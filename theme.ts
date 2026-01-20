@@ -66,7 +66,31 @@ export const THEME = {
       rememberMe: "Rester connecté",
       rememberMeSub: "Garder ma session active",
       forgotPassword: "Mot de passe oublié ?",
-      submitBtn: "Se connecter"
+      submitBtn: "Se connecter",
+      loadingBtn: "Connexion..."
+    },
+    signup: {
+      title: "Créez votre compte",
+      loginPrompt: "Vous avez déjà un compte ?",
+      loginLink: "Connectez-vous",
+      nameLabel: "Nom complet",
+      namePlaceholder: "Prénom et Nom",
+      phoneLabel: "Numéro de téléphone",
+      phonePlaceholder: "06 00 00 00 00",
+      emailLabel: "Adresse e-mail",
+      emailPlaceholder: "Ex: jean@taramoney.com",
+      passwordLabel: "Mot de passe",
+      passwordPlaceholder: "Choisissez un mot de passe fort",
+      submitBtn: "Créer mon compte",
+      loadingBtn: "Création..."
+    },
+    forgotPassword: {
+      title: "Mot de passe oublié ?",
+      instruction: "Ne vous inquiétez pas, cela arrive. Entrez l'adresse e-mail associée à votre compte.",
+      emailLabel: "Adresse e-mail",
+      emailPlaceholder: "Saisissez votre e-mail",
+      submitBtn: "Envoyer les instructions",
+      backToLogin: "Retour à la connexion"
     },
     support: {
       headerTitle: "Support Client",
@@ -74,6 +98,18 @@ export const THEME = {
       mainQuestion: "Par quel moyen souhaitez-vous contacter notre équipe ?",
       availability: "Notre équipe est disponible 24/7 pour vous accompagner.",
       helpLabel: "Besoin d'aide ?"
+    },
+    dashboard: {
+      welcome: "Bienvenue,",
+      balanceTitle: "Solde actuel",
+      balanceValue: "2 450 000 FCFA",
+      logout: "Se déconnecter",
+      tokenInfo: "Session sécurisée par JWT"
+    },
+    errors: {
+      generic: "Une erreur est survenue.",
+      invalidCredentials: "Email ou mot de passe incorrect.",
+      network: "Erreur de connexion serveur."
     }
   }
 };
